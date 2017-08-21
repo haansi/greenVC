@@ -273,7 +273,7 @@ public class VariantBuilder {
 									}
 									
 									if (cigarElement.getOperator() == CigarOperator.D) {
-
+										posCigar-= cigarElement.getLength();
 										Integer cigarElementStart = currentReferencePos;
 										Integer cigarElementLength = cigarElement.getLength();
 										Integer cigarElementEnd = currentReferencePos + cigarElementLength;
@@ -304,7 +304,8 @@ public class VariantBuilder {
 									 
 							 		  int i = 0; 
 									  while (i <=  cigarElementLength) {
-									  char insBase = samRecord.getReadString().charAt(posCigar-1+i);
+								
+										  char insBase = samRecord.getReadString().charAt(posCigar-1+i);
 										  
 										
 									  if ((samRecord.getFlags() & 0x10) ==  0x10) { 
@@ -334,19 +335,19 @@ public class VariantBuilder {
 										  //FORWARD
 										  switch (insBase) {
 											case 'A':
-												 result[currentReferencePos +i % (size)][16]++;
+												 result[currentReferencePos +i % (size)][12]++;
 												countIAf++;
 												break;
 											case 'C':
-												 result[currentReferencePos +i % (size)][17]++;
+												 result[currentReferencePos +i % (size)][13]++;
 												countICf++;
 												break;
 											case 'G':
-												 result[currentReferencePos +i % (size)][18]++;
+												 result[currentReferencePos +i % (size)][14]++;
 												countIGf++;
 												break;
 											case 'T':
-												 result[currentReferencePos +i % (size)][19]++;
+												 result[currentReferencePos +i % (size)][15]++;
 												countITf++;
 												break;
 											default:

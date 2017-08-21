@@ -38,7 +38,7 @@ public class BAMReader extends Tool {
 		String ref = (String) getValue("ref");
 		double vaf = (Double) getValue("VAF");
 		int qual = (Integer) getValue("QUAL");
-		int mapqual = (Integer) getValue("QUAL");
+		int mapqual = (Integer) getValue("MAPQ");
 
 		VariantBuilder builder = new VariantBuilder(in);
 		builder.setReference(ref);

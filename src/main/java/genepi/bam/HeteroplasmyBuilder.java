@@ -54,10 +54,10 @@ public class HeteroplasmyBuilder {
 			try {
 				while (idReader.next()) {
 					CheckEntry entry = new CheckEntry();
-					String id = idReader.getString("SamppleID");
+					String id = idReader.getString("SampleID");
 					entry.setID(id);
-					entry.setPOS(idReader.getInteger("POS"));
-					entry.setREF(idReader.getString("rCRS"));
+					entry.setPOS(idReader.getInteger("Pos"));
+					entry.setREF(idReader.getString("Ref"));
 					entry.setBaseMajor(idReader.getString("TOP-BASE-FWD"));
 					entry.setBaseMinor(idReader.getString("MINOR-BASE-FWD"));
 					entry.setVAF(idReader.getDouble("HET-LEVEL"));
@@ -71,7 +71,7 @@ public class HeteroplasmyBuilder {
 				}
 				idReader.close();
 			} catch (Exception e) {
-				System.out.println("Column names not present as expected: SampleID, rCRS, TOP-BASE-FWD, MINOR-BASE-FWD, HET-LEVEL");
+				System.out.println("Column names not present as expected: SampleID, Pos, Ref, TOP-BASE-FWD, MINOR-BASE-FWD, HET-LEVEL");
 				e.printStackTrace();
 			}
 

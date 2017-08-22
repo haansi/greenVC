@@ -9,7 +9,9 @@ public class CheckEntry {
 	 String ID;
 	 int POS;
 	 String REF;
-  	 String BaseMajor;
+	 String ALT;
+  	
+	String BaseMajor;
 	 String BaseMinor;
 	 
 	 double VAF;
@@ -50,7 +52,12 @@ public class CheckEntry {
 	public void setVAF(double vaf) {
 		this.VAF = vaf;
 	}
-
+	 public String getALT() {
+			return ALT;
+		}
+		public void setALT(String aLT) {
+			ALT = aLT;
+		}
 	 
 
 	

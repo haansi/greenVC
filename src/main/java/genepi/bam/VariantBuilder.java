@@ -443,7 +443,7 @@ public class VariantBuilder {
 		bwHsd.write(name + "\t1-16569\t\t");
 
 		bw.write(
-				"SampleID\tmtSNP\tPOS\tREFrCRS\tcountMajor\tBaseMajor\tcountMinor\tBaseMinor\tVAF\tClopperPearson_95_low\tClopperPearson_95_high\n");
+				"SampleID\tmtSNP\tPos\tRef\tcountMajor\tBaseMajor\tcountMinor\tBaseMinor\tVariant\tVariant-Level\tClopperPearson_95_low\tClopperPearson_95_high\n");
 		for (Entry<Integer, String> entry : variants.entrySet()) {
 
 			String help = entry.getValue();
@@ -465,13 +465,13 @@ public class VariantBuilder {
 
 					if (Ref.equals(Max)) {
 						bw.write(name + "\t" + entry.getKey() + Max + "\t" + entry.getKey() + "\t" + Ref + "\t"
-								+ countMajor + "\t" + Max + "\t" + numberMin + "\t" + ALT + "\t" + hetlevel + "\t"
+								+ countMajor + "\t" + Max + "\t" + numberMin + "\t" + ALT + "\t" + ALT + "\t" + hetlevel + "\t"
 								+ formatter.format(getClopperPearsonInterval(n, numberMin, 0.95).getLowerBound()) + "\t"
 								+ formatter.format(getClopperPearsonInterval(n, numberMin, 0.95).getUpperBound())
 								+ "\n");
 					} else if (!Ref.equals("N")) {
 						bw.write(name + "\t" + entry.getKey() + Max + "\t" + entry.getKey() + "\t" + Ref + "\t"
-								+ countMajor + "\t" + Max + "\t" + numberMin + "\t" + ALT + "\t"
+								+ countMajor + "\t" + Max + "\t" + numberMin + "\t" + ALT + "\t" + Max + "\t"
 								+ formatter.format(1 - hetlevel) + "\t"
 								+ formatter.format(getClopperPearsonInterval(n, numberMin, 0.95).getLowerBound()) + "\t"
 								+ formatter.format(getClopperPearsonInterval(n, numberMin, 0.95).getUpperBound())
@@ -482,7 +482,7 @@ public class VariantBuilder {
 				} else {
 					if (!Ref.equals(Max) && hetlevel < 1 - het) {
 						bw.write(name + "\t" + entry.getKey() + Max + "\t" + entry.getKey() + "\t" + Ref + "\t"
-								+ countMajor + "\t" + Max + "\t" + numberMin + "\t" + ALT + "\t"
+								+ countMajor + "\t" + Max + "\t" + numberMin + "\t" + ALT + "\t" + ALT+ "\t"
 								+ formatter.format(1 - hetlevel) + "\n");
 						bwHsd.write(entry.getKey() + Max + "\t");
 					}
@@ -491,7 +491,7 @@ public class VariantBuilder {
 			} else {
 				if (!Ref.equals(Max)) {
 					bw.write(name + "\t" + entry.getKey() + Max + "\t" + entry.getKey() + "\t" + Ref + "\t" + countMajor
-							+ "\t" + Max + "\t" + "\t" + "\t1\n");
+							+ "\t" + Max + "\t"  + "\t" + "\t"+ Max +"\t1\n");
 					bwHsd.write(entry.getKey() + Max + "\t");
 				}
 			}

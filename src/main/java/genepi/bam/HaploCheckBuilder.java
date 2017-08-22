@@ -22,6 +22,7 @@ import genepi.io.table.reader.CsvTableReader;
 import genepi.io.table.reader.ITableReader;
 import genepi.objects.CheckEntry;
 import genepi.objects.HSDEntry;
+import genepi.objects.HeaderNames;
 
 public class HaploCheckBuilder {
 	
@@ -37,30 +38,29 @@ public class HaploCheckBuilder {
 		this.outfile = outfile;
 	}
 
-	public int build() throws MalformedURLException, IOException {
-	
-	FileInputStream fstream;
+	public int build(String variantfile, String outfile, double vaf) throws MalformedURLException, IOException {
+		
 		try {
 			
 		//	input = directoryListing[0].getAbsolutePath();
 			
 			ITableReader idReader = TableReaderFactory.getReader(variantfile);
 
+
 			HashMap<String, ArrayList<CheckEntry>> hm = new HashMap<String, ArrayList<CheckEntry>>();
 			FileWriter fw;
-			fw = new FileWriter(new File(outfile));
+			fw = new FileWriter(outfile);
 			fw.write("SampleID\tRange\tHaplogroup\tPolymorphisms");
 			fw.write(System.lineSeparator());
 			try {
 				while (idReader.next()) {
 					CheckEntry entry = new CheckEntry();
-					String id = idReader.getString("SampleID");
+					String id =  idReader.getString(HeaderNames.SampleId.colname()); //ID
 					entry.setID(id);
-					entry.setPOS(idReader.getInteger("POS"));
-					entry.setREF(idReader.getString("REFrCRS"));
-					entry.setBaseMajor(idReader.getString("BaseMajor"));
-					entry.setBaseMinor(idReader.getString("BaseMinor"));
-					entry.setVAF(idReader.getDouble("VAF"));
+					entry.setPOS(idReader.getInteger(HeaderNames.Position.colname()));  //POS
+					entry.setREF(idReader.getString(HeaderNames.Reference.colname()));	//REF
+					entry.setALT(idReader.getString(HeaderNames.VariantBase.colname())); //ALT
+					entry.setVAF(idReader.getDouble(HeaderNames.VariantLevel.colname())); //VAF
 
 					if (hm.containsKey(id)) {
 						hm.get(id).add(entry);
@@ -71,7 +71,6 @@ public class HaploCheckBuilder {
 				}
 				idReader.close();
 			} catch (Exception e) {
-				System.out.println("Column names not present as expected: SampleID, REFrCRS, BaseMajor, BaseMinor, VAF");
 				e.printStackTrace();
 			}
 
@@ -81,65 +80,50 @@ public class HaploCheckBuilder {
 				HSDEntry minor = new HSDEntry();
 				HSDEntry major = new HSDEntry();
 				minor.setID(pair.getKey() + "_min");
-				StringBuffer range = new StringBuffer();
-				
+				minor.setRANGE("1-16569");
 				major.setID(pair.getKey() + "_maj");
-				
-
+				major.setRANGE("1-16569");
+				int hetcounter=0;
 				ArrayList<CheckEntry> helpArray = hm.get(pair.getKey());
 				for (int i = 0; i < helpArray.size(); i++) {
 
-					if (helpArray.get(i).getREF().contains("-") || helpArray.get(i).getREF().equals("N")) {
+					if (helpArray.get(i).getREF().contains("-") || helpArray.get(i).getALT().contains("-")
+							|| helpArray.get(i).getREF().equals("N") || helpArray.get(i).getALT().length() > 1
+							|| helpArray.get(i).getREF().length() > 1) {
 						// skip indel, and 3107 on rCRS;
 					} else {
-						
 						if (helpArray.get(i).getVAF() < 0.5) {
-							range.append(helpArray.get(i).getPOS() + ";");
-							if (helpArray.get(i).getREF().equals(helpArray.get(i).getPOS())) {
-								minor.appendPROFILES(helpArray.get(i).getPOS() + helpArray.get(i).getBaseMinor()); //+ " " + helpArray.get(i).getVAF());
-								major.appendPROFILES(helpArray.get(i).getPOS() + helpArray.get(i).getBaseMajor()); //+ " " + helpArray.get(i).getVAF());
-							} else {
-								minor.appendPROFILES(helpArray.get(i).getPOS() + helpArray.get(i).getBaseMinor()); //+ " " + helpArray.get(i).getVAF());
-								major.appendPROFILES(helpArray.get(i).getPOS() + helpArray.get(i).getBaseMajor()); //+ " " + helpArray.get(i).getVAF());
-							}
-						} else if (helpArray.get(i).getVAF() > 1-vaf) {
-							range.append(helpArray.get(i).getPOS() + ";");
-							if (helpArray.get(i).getREF().equals(helpArray.get(i).getPOS())) {
-								minor.appendPROFILES(helpArray.get(i).getPOS() + helpArray.get(i).getBaseMajor()); // + " " + helpArray.get(i).getVAF());
-								major.appendPROFILES(helpArray.get(i).getPOS() + helpArray.get(i).getBaseMinor()); // + " " + helpArray.get(i).getVAF());
-							} else {
-								minor.appendPROFILES(helpArray.get(i).getPOS() + helpArray.get(i).getBaseMajor()); //+ " " + helpArray.get(i).getVAF());
-								major.appendPROFILES(helpArray.get(i).getPOS() + helpArray.get(i).getBaseMinor()); //+ " " + helpArray.get(i).getVAF());
-							}
-						}/*
-						//TODO recheck if homoplasmies are neccessary
-						 else { // add fixed homoplasmies VAF == 1
-							minor.appendPROFILES(helpArray.get(i).getPOS() + helpArray.get(i).getBaseMajor()); //+ " " + helpArray.get(i).getVAF());
-							major.appendPROFILES(helpArray.get(i).getPOS() + helpArray.get(i).getBaseMajor()); //+ " " + helpArray.get(i).getVAF());
-						}*/
+							minor.appendPROFILES(helpArray.get(i).getPOS() + helpArray.get(i).getREF());
+							major.appendPROFILES(helpArray.get(i).getPOS() + helpArray.get(i).getALT());
+							hetcounter++;
+						} else if (helpArray.get(i).getVAF() >= 0.5 && helpArray.get(i).getVAF() < 1-vaf){
+							minor.appendPROFILES(helpArray.get(i).getPOS() + helpArray.get(i).getALT());
+							major.appendPROFILES(helpArray.get(i).getPOS() + helpArray.get(i).getREF());
+							hetcounter++;
+						}
+						else{
+							minor.appendPROFILES(helpArray.get(i).getPOS() + helpArray.get(i).getALT());
+							major.appendPROFILES(helpArray.get(i).getPOS() + helpArray.get(i).getALT());
+						}
+						
 					}
-					
-					//use only occurrences
-					minor.setRANGE(range.toString()); 
-					major.setRANGE(range.toString());
-										
-					//minor.setRANGE("1-16569");
-					//major.setRANGE("1-16569");
-			
 				}
+				if (hetcounter>0){
 				fw.write(minor.getString());
 				fw.write(System.lineSeparator());
 				fw.write(major.getString());
 				fw.write(System.lineSeparator());
+				}
 				it.remove(); // avoids a ConcurrentModificationException
 			}
 			fw.close();
-			System.out.println("File written - you can now open the result file in HaploGrep2");
+
+
 		} catch (Exception e) {
 			System.out.println("ERROR");
 			e.printStackTrace();
+			return -1;
 		}
-		// Everything fine
 		return 0;
 	}
 	

@@ -556,7 +556,7 @@ public class VariantBuilder {
 		File fout = new File(filename);
 		FileOutputStream fstream = new FileOutputStream(fout);
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fstream));
-		bw.write("POS\tA\tC\tG\tT\tN\tDEL\tINS\ta\tc\tg\tt\tn\tdel\tins\n");
+		bw.write("POS\tA\tC\tG\tT\tN\tDEL\ta\tc\tg\tt\tn\tdel\t.A\t.C\t.G\t.T\t.a\t.c\t.g\t.t\n");
 
 		for (int i = 0; i < size; i++) {
 			bw.write((i) + "\t");

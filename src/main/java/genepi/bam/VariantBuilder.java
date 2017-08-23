@@ -303,8 +303,10 @@ public class VariantBuilder {
 									  Integer  cigarElementLength = cigarElement.getLength();
 									 
 							 		  int i = 0; 
-									  while (i <=  cigarElementLength) {
-								
+									  while (i <  cigarElementLength) {
+							
+								if ((posCigar-1+i)<samRecord.getReadString().length())
+								{
 										  char insBase = samRecord.getReadString().charAt(posCigar-1+i);
 										  
 										
@@ -353,12 +355,14 @@ public class VariantBuilder {
 											default:
 												break;
 								  		}
-									  }
-									  i++;
-									  } 
-									  }
+													}
+													i++;
+												}
+												i++;
+											}
+										}
+									}
 								}
-							}
 						}
 					}
 				}

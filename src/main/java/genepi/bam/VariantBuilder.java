@@ -474,6 +474,7 @@ public class VariantBuilder {
 								+ formatter.format(getClopperPearsonInterval(n, numberMin, 0.95).getUpperBound())
 								+ "\n");
 					} else if (!Ref.equals("N")) {
+						System.out.println(name + "\t" + entry.getKey() + Max + "\t" + entry.getKey());
 						bw.write(name + "\t" + entry.getKey() + Max + "\t" + entry.getKey() + "\t" + Ref + "\t"
 								+ countMajor + "\t" + Max + "\t" + numberMin + "\t" + ALT + "\t" + Max + "\t"
 								+ formatter.format(1 - hetlevel) + "\t"
@@ -485,8 +486,9 @@ public class VariantBuilder {
 
 				} else {
 					if (!Ref.equals(Max) && hetlevel < 1 - het) {
+						System.out.println(name + "\t" + entry.getKey() + Max + "\t" + entry.getKey());
 						bw.write(name + "\t" + entry.getKey() + Max + "\t" + entry.getKey() + "\t" + Ref + "\t"
-								+ countMajor + "\t" + Max + "\t" + numberMin + "\t" + ALT + "\t" + ALT+ "\t"
+								+ countMajor + "\t" + Max + "\t" + numberMin + "\t" + ALT + "\t" + Max+ "\t"
 								+ formatter.format(1 - hetlevel) + "\n");
 						bwHsd.write(entry.getKey() + Max + "\t");
 					}

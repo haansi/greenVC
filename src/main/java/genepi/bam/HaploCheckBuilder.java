@@ -27,7 +27,6 @@ import genepi.objects.HeaderNames;
 public class HaploCheckBuilder {
 	
 
-
 	private String variantfile;
 	private String outfile;
 	private double vaf;

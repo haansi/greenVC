@@ -38,7 +38,6 @@ public class HaploCheckBuilder {
 	}
 
 	public int build(String variantfile, String outfile, double vaf) throws MalformedURLException, IOException {
-		
 		try {
 			
 		//	input = directoryListing[0].getAbsolutePath();
@@ -70,6 +69,8 @@ public class HaploCheckBuilder {
 				}
 				idReader.close();
 			} catch (Exception e) {
+				System.out.println("Header Informations not found - Required: " + HeaderNames.SampleId.colname() + " " + HeaderNames.Position.colname() + " " +
+						HeaderNames.Reference.colname()+ " " + HeaderNames.VariantBase.colname() + " " + HeaderNames.VariantLevel.colname());
 				e.printStackTrace();
 			}
 
